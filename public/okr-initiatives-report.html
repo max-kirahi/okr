@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Initiatives Management - OKR System</title>
+    <title>OKR with Initiatives Report - OKR System</title>
     
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="kirahi-logo.png">
@@ -37,16 +37,16 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="initiatives.html">
+                        <a class="nav-link" href="initiatives.html">
                             <i class="fas fa-lightbulb me-1"></i>Initiatives
                         </a>
                     </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle active" href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             <i class="fas fa-chart-bar me-1"></i>Reports
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="reportsDropdown">
-                            <li><a class="dropdown-item" href="okr-initiatives-report.html">
+                            <li><a class="dropdown-item active" href="okr-initiatives-report.html">
                                 <i class="fas fa-link me-2"></i>OKR with Initiatives
                             </a></li>
                             <li><a class="dropdown-item" href="units-report.html">
@@ -62,7 +62,7 @@
                 <!-- Search Form -->
                 <form class="d-flex" id="searchform">
                     <div class="input-group">
-                        <input class="form-control" type="search" id="searchtext" placeholder="Search Initiatives..." aria-label="Search">
+                        <input class="form-control" type="search" id="searchtext" placeholder="Search OKR with Initiatives..." aria-label="Search">
                         <button class="btn btn-outline-light" type="submit">
                             <i class="fas fa-search"></i>
                         </button>
@@ -76,17 +76,22 @@
     <div class="container-fluid" style="margin-top: 80px; padding-top: 20px;">
         <div class="row">
             <div class="col-12">
-                <!-- Add New Initiative Button -->
+                <!-- Report Header -->
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <h4 class="mb-0">
-                        <i class="fas fa-lightbulb me-2"></i>Initiatives List
+                        <i class="fas fa-link me-2"></i>OKR with Initiatives Report
                     </h4>
-                    <button class="btn btn-success" id="addNew" data-bs-toggle="modal" data-bs-target="#addnewitemform">
-                        <i class="fas fa-plus me-2"></i>Add New Initiative
-                    </button>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-primary" id="refreshBtn">
+                            <i class="fas fa-sync-alt me-1"></i>Refresh
+                        </button>
+                        <button class="btn btn-outline-success" id="exportBtn">
+                            <i class="fas fa-download me-1"></i>Export
+                        </button>
+                    </div>
                 </div>
                 
-                <!-- Initiatives Table Container -->
+                <!-- OKR with Initiatives Table Container -->
                 <div class="card">
                     <div class="card-body p-0">
                         <div id="item-list-div"></div>
@@ -109,58 +114,34 @@
         </div>
     </div>
 
-    <!-- Add New Initiative Modal -->
-    <div class="modal fade" id="addnewitemform" tabindex="-1" aria-labelledby="addItemModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title d-flex align-items-center" id="addItemModalLabel">
-                        <img src="kirahi-logo.png" alt="Kirahi Logo" class="me-2" style="width: 36px; height: 36px; object-fit: contain;">
-                        <i class="fas fa-lightbulb me-2"></i>Add New Initiative
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                
-                <form id="addItemForm">
-                    <div class="modal-body">
-                        <!-- Dynamic form fields will be generated here -->
-                    </div>
-                    
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                            <i class="fas fa-times me-1"></i>Cancel
-                        </button>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-1"></i>Save Initiative
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
     <!-- Bootstrap JS -->
     <script src="bootstrap-5.3.8-dist/js/bootstrap.bundle.min.js"></script>
     
     <!-- Application Scripts -->
-    <script type="module" src="../js/initiatives.mjs"></script>
+    <script type="module" src="../js/reports.mjs"></script>
     <script type="module">
         import { 
-            handleFormSubmission, 
             displayfiltereditems, 
             displayallitems 
-        } from '../js/initiatives.mjs';
+        } from '../js/reports.mjs';
         
-        // Add new Initiative form submission
-        document.getElementById('addItemForm').addEventListener("submit", (e) => {
-            e.preventDefault();
-            handleFormSubmission();
-        });
+        // Set the table name for this report
+        window.currentReportTable = 'okrswithinitiatives';
         
         // Search form submission
         document.getElementById('searchform').addEventListener("submit", (e) => {
             e.preventDefault();
             displayfiltereditems();
+        });
+
+        // Refresh button
+        document.getElementById('refreshBtn').addEventListener("click", () => {
+            displayallitems();
+        });
+
+        // Export button (placeholder functionality)
+        document.getElementById('exportBtn').addEventListener("click", () => {
+            alert('Export functionality will be implemented in a future update.');
         });
 
         // Error message handling
@@ -189,7 +170,7 @@
             }, 5000);
         });
 
-        // Initialize the application by displaying all records in the db for the Initiatives table
+        // Initialize the application by displaying all records in the db for the OKR with Initiatives view
         displayallitems();
     </script>
 </body>

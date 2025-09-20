@@ -636,6 +636,10 @@ function formatColumnNameForDisplay(columnName) {
         formatted = formatted.replace(/(target)(date)/gi, '$1 $2');
         formatted = formatted.replace(/(created)(on)/gi, '$1 $2');
         formatted = formatted.replace(/(modified)(on|time)/gi, '$1 $2');
+        
+        // Handle unit and employee-specific patterns (more specific first)
+        formatted = formatted.replace(/(unit)(ofmeasurement)/gi, '$1 Of Measurement');
+        formatted = formatted.replace(/(employee)(name)/gi, '$1 $2');
         formatted = formatted.replace(/(unit)(of|measurement)/gi, '$1 $2');
         
         // Handle initiative-specific patterns

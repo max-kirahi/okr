@@ -38,13 +38,13 @@ function getTableMetadata(tableName, callback) {
   if (!tableName) return callback(new Error('Table name is required'));
   if (metadataCache.has(tableName)) return callback(null, metadataCache.get(tableName));
 
-  // Verify table exists
+  // Verify table or view exists
   db.get(
-    "SELECT name FROM sqlite_master WHERE type='table' AND name = ?",
+    "SELECT name FROM sqlite_master WHERE (type='table' OR type='view') AND name = ?",
     [tableName],
     (err, row) => {
       if (err) return callback(err);
-      if (!row) return callback(new Error(`Table not found: ${tableName}`));
+      if (!row) return callback(new Error(`Table or view not found: ${tableName}`));
 
       // Introspect columns and primary key
       const pragmaSql = `PRAGMA table_info(${quoteIdentifier(tableName)})`;
@@ -53,7 +53,8 @@ function getTableMetadata(tableName, callback) {
         if (!rows || rows.length === 0) return callback(new Error(`No columns found for ${tableName}`));
         const columns = rows.map((r) => r.name);
         const pkRow = rows.find((r) => r.pk === 1) || rows.find((r) => r.pk > 0);
-        const primaryKey = pkRow ? pkRow.name : (columns.includes('id') ? 'id' : null);
+        // For views, primary key detection is more lenient
+        const primaryKey = pkRow ? pkRow.name : (columns.includes('id') ? 'id' : columns[0] || null);
         const meta = { columns, primaryKey };
         metadataCache.set(tableName, meta);
         callback(null, meta);
