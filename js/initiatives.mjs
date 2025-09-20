@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025, Kirahi LLC
+ * Max Seenisamy kirahi.com
+ * This source code is licensed under the ISC license.
+ * See LICENSE.txt for more information.
+ */
+
 // ES Module for Initiatives management - Initiatives Table in the database
 // this is the only MJS file that will be imported into the initiatives.html file
 // all the other MJS files will be imported into this file
@@ -114,6 +121,8 @@ async function displayallitems (tableName = 'initiatives') {
             return;
         }
         currentRows = allinitiativesjson;
+        // Make current data available globally for export
+        window.currentRows = currentRows;
         displaytable(allinitiativesjson, prepareEditForm, deleterow, () => displayallitems(currentTable));
     } catch (error) {
         console.error('Error displaying all Initiatives:', error);
@@ -153,6 +162,8 @@ async function displayfiltereditems (tableName = 'initiatives') {
             return;
         }
         currentRows = filteredinitiativesjson;
+        // Make current data available globally for export
+        window.currentRows = currentRows;
         console.log('Filtered data converted to JSON Successfully');
         displaytable(filteredinitiativesjson, prepareEditForm, deleterow, () => displayallitems(currentTable));
 

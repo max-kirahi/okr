@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025, Kirahi LLC
+ * Max Seenisamy kirahi.com
+ * This source code is licensed under the ISC license.
+ * See LICENSE.txt for more information.
+ */
+
 // HTML Helper functions for dynamic form and table rendering
 import { handleError } from './validation.mjs';
 import { fetchTableMeta } from './restcallsfordbdata.mjs';
@@ -669,6 +676,70 @@ function formatColumnNameForDisplay(columnName) {
     }
 }
 
+/**
+ * Exports table data to CSV format and triggers download
+ * @param {Array} data - Array of objects containing the table data
+ * @param {string} filename - Name of the CSV file to download
+ * @param {Function} [formatColumnName] - Optional function to format column names for headers
+ * @throws {Error} If export fails
+ */
+function exportToCSV(data, filename, formatColumnName = null) {
+    try {
+        if (!Array.isArray(data) || data.length === 0) {
+            throw new Error('No data available to export');
+        }
+
+        // Get column names from the first row
+        const columns = Object.keys(data[0]);
+        
+        // Format column names if formatter provided
+        const headers = formatColumnName ? 
+            columns.map(col => formatColumnName(col)) : 
+            columns;
+
+        // Create CSV content
+        let csvContent = '';
+        
+        // Add headers
+        csvContent += headers.map(header => `"${header}"`).join(',') + '\n';
+        
+        // Add data rows
+        data.forEach(row => {
+            const values = columns.map(col => {
+                const value = row[col] || '';
+                // Escape quotes and wrap in quotes
+                return `"${String(value).replace(/"/g, '""')}"`;
+            });
+            csvContent += values.join(',') + '\n';
+        });
+
+        // Create and trigger download
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        
+        if (link.download !== undefined) {
+            // Feature detection for browsers that support HTML5 download attribute
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        } else {
+            // Fallback for older browsers
+            throw new Error('CSV export not supported in this browser');
+        }
+
+        console.log(`CSV export completed: ${filename}`);
+        
+    } catch (error) {
+        console.error('Error exporting to CSV:', error);
+        throw new Error(`Failed to export CSV: ${error.message}`);
+    }
+}
+
 // Export functions for use in other modules
 export {
     createElement,
@@ -678,5 +749,6 @@ export {
     createResponsibleDropdown,
     buildDynamicForm,
     displaytable,
-    formatColumnNameForDisplay
+    formatColumnNameForDisplay,
+    exportToCSV
 };

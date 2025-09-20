@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025, Kirahi LLC
+ * Max Seenisamy kirahi.com
+ * This source code is licensed under the ISC license.
+ * See LICENSE.txt for more information.
+ */
+
 // ES Module for OKR management - OKR Table in the database
 // this is the only MJS file that will be imported into the okr.html file
 // all the other MJS files will be imported into this file
@@ -104,6 +111,8 @@ async function displayallitems (tableName = 'okr') {
             return;
         }
         currentRows = allokrsjson;
+        // Make current data available globally for export
+        window.currentRows = currentRows;
         displaytable(allokrsjson, prepareEditForm, deleterow, () => displayallitems(currentTable));
     } catch (error) {
         console.error('Error displaying all OKRs:', error);
@@ -143,6 +152,8 @@ async function displayfiltereditems (tableName = 'okr') {
             return;
         }
         currentRows = filteredokrsjson;
+        // Make current data available globally for export
+        window.currentRows = currentRows;
         console.log('Filtered data converted to JSON Successfully');
         displaytable(filteredokrsjson, prepareEditForm, deleterow, () => displayallitems(currentTable));
 

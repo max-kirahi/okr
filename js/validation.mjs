@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025, Kirahi LLC
+ * Max Seenisamy kirahi.com
+ * This source code is licensed under the ISC license.
+ * See LICENSE.txt for more information.
+ */
+
 // ES Module for field validation and error handling
 
 /**

@@ -1,3 +1,10 @@
+<!--
+ * Copyright (c) 2025, Kirahi LLC
+ * Max Seenisamy kirahi.com
+ * This source code is licensed under the ISC license.
+ * See LICENSE.txt for more information.
+ -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -81,9 +88,14 @@
                     <h4 class="mb-0">
                         <i class="fas fa-lightbulb me-2"></i>Initiatives List
                     </h4>
-                    <button class="btn btn-success" id="addNew" data-bs-toggle="modal" data-bs-target="#addnewitemform">
-                        <i class="fas fa-plus me-2"></i>Add New Initiative
-                    </button>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-outline-success" id="exportBtn">
+                            <i class="fas fa-download me-1"></i>Export CSV
+                        </button>
+                        <button class="btn btn-success" id="addNew" data-bs-toggle="modal" data-bs-target="#addnewitemform">
+                            <i class="fas fa-plus me-2"></i>Add New Initiative
+                        </button>
+                    </div>
                 </div>
                 
                 <!-- Initiatives Table Container -->
@@ -150,6 +162,10 @@
             displayfiltereditems, 
             displayallitems 
         } from '../js/initiatives.mjs';
+        import { 
+            exportToCSV,
+            formatColumnNameForDisplay
+        } from '../js/htmlhelpers.mjs';
         
         // Add new Initiative form submission
         document.getElementById('addItemForm').addEventListener("submit", (e) => {
@@ -161,6 +177,29 @@
         document.getElementById('searchform').addEventListener("submit", (e) => {
             e.preventDefault();
             displayfiltereditems();
+        });
+
+        // Export button
+        document.getElementById('exportBtn').addEventListener("click", async () => {
+            try {
+                // Get current data from the global state in initiatives.mjs
+                const currentData = window.currentRows || [];
+                if (currentData.length === 0) {
+                    alert('No data available to export. Please load data first.');
+                    return;
+                }
+                
+                // Generate filename with timestamp
+                const timestamp = new Date().toISOString().split('T')[0];
+                const filename = `initiatives_export_${timestamp}.csv`;
+                
+                // Export to CSV with formatted headers
+                exportToCSV(currentData, filename, formatColumnNameForDisplay);
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                alert('Failed to export data: ' + error.message);
+            }
         });
 
         // Error message handling

@@ -1,3 +1,10 @@
+/*
+ * Copyright (c) 2025, Kirahi LLC
+ * Max Seenisamy kirahi.com
+ * This source code is licensed under the ISC license.
+ * See LICENSE.txt for more information.
+ */
+
 // ES Module for Reports - Read-only table display for various tables
 // This module provides read-only functionality for displaying tables without modals
 // Used by units-report.html and owners-report.html
@@ -44,6 +51,8 @@ async function displayallitems (tableName = null) {
             return;
         }
         currentRows = allRowsJson;
+        // Make current data available globally for export
+        window.currentRows = currentRows;
         
         // Display table without edit/delete functionality (read-only)
         displaytable(allRowsJson, null, null, () => displayallitems(reportTable));
@@ -93,6 +102,8 @@ async function displayfiltereditems (tableName = null) {
             return;
         }
         currentRows = filteredRowsJson;
+        // Make current data available globally for export
+        window.currentRows = currentRows;
         console.log('Filtered data converted to JSON Successfully');
         
         // Display table without edit/delete functionality (read-only)

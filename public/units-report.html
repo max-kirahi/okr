@@ -1,3 +1,10 @@
+<!--
+ * Copyright (c) 2025, Kirahi LLC
+ * Max Seenisamy kirahi.com
+ * This source code is licensed under the ISC license.
+ * See LICENSE.txt for more information.
+ -->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,6 +131,10 @@
             displayfiltereditems, 
             displayallitems 
         } from '../js/reports.mjs';
+        import { 
+            exportToCSV,
+            formatColumnNameForDisplay
+        } from '../js/htmlhelpers.mjs';
         
         // Set the table name for this report
         window.currentReportTable = 'units';
@@ -139,9 +150,27 @@
             displayallitems();
         });
 
-        // Export button (placeholder functionality)
-        document.getElementById('exportBtn').addEventListener("click", () => {
-            alert('Export functionality will be implemented in a future update.');
+        // Export button
+        document.getElementById('exportBtn').addEventListener("click", async () => {
+            try {
+                // Get current data from the global state in reports.mjs
+                const currentData = window.currentRows || [];
+                if (currentData.length === 0) {
+                    alert('No data available to export. Please load data first.');
+                    return;
+                }
+                
+                // Generate filename with timestamp
+                const timestamp = new Date().toISOString().split('T')[0];
+                const filename = `units_report_${timestamp}.csv`;
+                
+                // Export to CSV with formatted headers
+                exportToCSV(currentData, filename, formatColumnNameForDisplay);
+                
+            } catch (error) {
+                console.error('Export error:', error);
+                alert('Failed to export data: ' + error.message);
+            }
         });
 
         // Error message handling
